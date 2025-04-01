@@ -38,3 +38,40 @@ class Table extends Area {
         table.appendChild(tbody);
     }
 }
+
+class Form extends Area {
+    constructor(cssClass){
+        super(cssClass);    
+        const form = document.createElement('form');
+        this.div.appendChild(form);
+        const fieldElementList = [{
+            fieldid: 'name',
+            fieldLabel: 'név'
+        },
+        {
+            fieldid: 'birth',
+            fieldLabel: 'születési év'
+        },
+        {
+            fieldid: 'zipcode',
+            fieldLabel: 'irányítószám'
+        }]
+        
+        for(const fieldElement of fieldElementList){
+            const field = makeDiv('field');
+            form.appendChild(field);
+            const label = document.createElement('label');
+            label.htmlFor = fieldElement.fieldid;
+            label.textContent = fieldElement.fieldLabel;
+            field.appendChild(label)
+            const input = document.createElement('input');
+            input.id = fieldElement.fieldid;
+            field.appendChild(document.createElement('br'))
+            field.appendChild(input)
+        }
+        
+        const button = document.createElement('button');
+        button.textContent = 'hozzáadás';
+        form.appendChild(button)
+    }
+}
