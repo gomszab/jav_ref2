@@ -138,3 +138,20 @@ fileInput.addEventListener('change', (e) => {
     }
     fileReader.readAsText(file);
 })
+
+const exportButton = document.createElement('button');
+exportButton.textContent = 'Letöltés';
+containerDiv.appendChild(exportButton);
+exportButton.addEventListener('click', () => {
+    const link = document.createElement('a');
+    const contentArray = ['name;birth;zipcode']
+    for(const pers of array){
+        contentArray.push(`${pers.name};${pers.birth};${pers.zipcode}`);
+    }
+    const content = contentArray.join('\n');
+    const file = new Blob([content])
+    link.href = URL.createObjectURL(file);
+    link.download = 'newdata.csv'
+    link.click();
+    URL.revokeObjectURL(link.href);
+})
