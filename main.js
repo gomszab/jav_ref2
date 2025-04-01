@@ -47,10 +47,14 @@ for(const fieldElement of fieldElementList){
     label.htmlFor = fieldElement.fieldid;
     label.textContent = fieldElement.fieldLabel;
     field.appendChild(label)
+    field.appendChild(document.createElement('br'))
     const input = document.createElement('input');
     input.id = fieldElement.fieldid;
-    field.appendChild(document.createElement('br'))
     field.appendChild(input)
+    field.appendChild(document.createElement('br'))
+    const error = document.createElement('span');
+    error.className = 'error';
+    field.appendChild(error);
 }
 
 const buttonFormSim = document.createElement('button');
@@ -60,24 +64,38 @@ formSim.addEventListener('submit', (e)=> {
     e.preventDefault();
     const valueObject = {}
     const inputFields = e.target.querySelectorAll('input');
+    let valid = true;
     for(const inputField of inputFields){
+        const error = inputField.parentElement.querySelector('.error');
+        if(!error){
+            console.error('nincs errorfield');
+            return;
+        }
+        error.textContent = '';
+        if(inputField.value === ''){
+            error.textContent = 'Kotelezo megadni';
+            valid = false;
+        }
         valueObject[inputField.id] = inputField.value;
     }
-    array.push(valueObject);
-    const tableBodyRow = document.createElement('tr');
-    tbody.appendChild(tableBodyRow);
     
-    const nameCell = document.createElement('td');
-    nameCell.textContent = valueObject.name;
-    tableBodyRow.appendChild(nameCell);
-
-    const birthCell = document.createElement('td');
-    birthCell.textContent = valueObject.birth;
-    tableBodyRow.appendChild(birthCell);
-
-    const zipCodeCell = document.createElement('td');
-    zipCodeCell.textContent = valueObject.zipcode;
-    tableBodyRow.appendChild(zipCodeCell);
+    if(valid){
+        array.push(valueObject);
+        const tableBodyRow = document.createElement('tr');
+        tbody.appendChild(tableBodyRow);
+        
+        const nameCell = document.createElement('td');
+        nameCell.textContent = valueObject.name;
+        tableBodyRow.appendChild(nameCell);
+    
+        const birthCell = document.createElement('td');
+        birthCell.textContent = valueObject.birth;
+        tableBodyRow.appendChild(birthCell);
+    
+        const zipCodeCell = document.createElement('td');
+        zipCodeCell.textContent = valueObject.zipcode;
+        tableBodyRow.appendChild(zipCodeCell);
+    }
 })
 
 containerDiv.appendChild(tableDiv);
