@@ -24,5 +24,37 @@ tableSim.appendChild(tbody);
 
 const formDiv = makeDiv('form');
 
+const formSim = document.createElement('form');
+formDiv.appendChild(formSim)
+const fieldElementList = [{
+    fieldid: 'name',
+    fieldLabel: 'név'
+},
+{
+    fieldid: 'birth',
+    fieldLabel: 'születési év'
+},
+{
+    fieldid: 'zipcode',
+    fieldLabel: 'irányítószám'
+}]
+
+for(const fieldElement of fieldElementList){
+    const field = makeDiv('field');
+    formSim.appendChild(field);
+    const label = document.createElement('label');
+    label.htmlFor = fieldElement.fieldid;
+    label.textContent = fieldElement.fieldLabel;
+    field.appendChild(label)
+    const input = document.createElement('input');
+    input.id = fieldElement.fieldid;
+    field.appendChild(document.createElement('br'))
+    field.appendChild(input)
+}
+
+const buttonFormSim = document.createElement('button');
+buttonFormSim.textContent = 'hozzáadás';
+formSim.appendChild(buttonFormSim)
+
 containerDiv.appendChild(tableDiv);
 containerDiv.appendChild(formDiv);
