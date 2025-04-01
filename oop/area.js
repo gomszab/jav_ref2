@@ -7,21 +7,30 @@ class Area{
     }
 
     constructor(className){
+        const container = this.#getContainerDiv();
+        this.#div = document.createElement('div');
+        this.#div.className = className;
+        container.appendChild(this.#div);
+    }
+
+    #getContainerDiv(){
         let containerDiv = document.querySelector('.containeroop');
         if(!containerDiv){
             containerDiv = document.createElement('div');
             containerDiv.className = 'containeroop';
             document.body.appendChild(containerDiv);
         }
-        this.#div = document.createElement('div');
-        this.#div.className = className;
-        containerDiv.appendChild(this.#div);
+        return containerDiv;
     }
 }
 
 class Table extends Area {
     constructor(cssClass){
-        super(cssClass);    
+        super(cssClass);
+        const tbody = this.#createTable();
+    }
+
+    #createTable(){
         const table = document.createElement('table');
         this.div.appendChild(table);
         const thead = document.createElement('thead');
@@ -36,27 +45,15 @@ class Table extends Area {
         }
         const tbody = document.createElement('tbody');
         table.appendChild(tbody);
+        return tbody;
     }
 }
 
 class Form extends Area {
-    constructor(cssClass){
+    constructor(cssClass, fieldElementList){
         super(cssClass);    
         const form = document.createElement('form');
         this.div.appendChild(form);
-        const fieldElementList = [{
-            fieldid: 'name',
-            fieldLabel: 'név'
-        },
-        {
-            fieldid: 'birth',
-            fieldLabel: 'születési év'
-        },
-        {
-            fieldid: 'zipcode',
-            fieldLabel: 'irányítószám'
-        }]
-        
         for(const fieldElement of fieldElementList){
             const field = makeDiv('field');
             form.appendChild(field);
