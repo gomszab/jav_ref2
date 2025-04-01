@@ -78,8 +78,8 @@ class Form extends Area {
     #formFieldArray;
 
     constructor(cssClass, fieldElementList, manager){
-        super(cssClass, manager);   
-        this.#formFieldArray = []; 
+        super(cssClass, manager);    
+        this.#formFieldArray = []
         const form = document.createElement('form');
         this.div.appendChild(form);
         for(const fieldElement of fieldElementList){
@@ -93,13 +93,20 @@ class Form extends Area {
         form.appendChild(button)
         form.addEventListener('submit', (e)=> {
             e.preventDefault();
-            const inputFieldList = e.target.querySelectorAll('input');
             const valueObject = {};
-            for(const inputField of inputFieldList){
-                valueObject[inputField.id] = inputField.value;
+            let valid = true;
+            for(const formField of this.#formFieldArray){
+                formField.error = '';
+                if(formField.value === ''){
+                    formField.error = 'Kotelezo megadni';
+                    valid = false;
+                }
+                valueObject[formField.id] = formField.value;
             }
-            const person = new Person(valueObject.name, Number(valueObject.birth), Number(valueObject.zipcode));
-            this.manager.addPerson(person);
+            if(valid){
+                const person = new Person(valueObject.name, Number(valueObject.birth), Number(valueObject.zipcode));
+                this.manager.addPerson(person);
+            } 
         })
     }
 }
