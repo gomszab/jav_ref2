@@ -1,3 +1,4 @@
+const array = [];
 const makeDiv = (className) => {
     const div = document.createElement('div');
     div.className = className;
@@ -55,6 +56,29 @@ for(const fieldElement of fieldElementList){
 const buttonFormSim = document.createElement('button');
 buttonFormSim.textContent = 'hozzáadás';
 formSim.appendChild(buttonFormSim)
+formSim.addEventListener('submit', (e)=> {
+    e.preventDefault();
+    const valueObject = {}
+    const inputFields = e.target.querySelectorAll('input');
+    for(const inputField of inputFields){
+        valueObject[inputField.id] = inputField.value;
+    }
+    array.push(valueObject);
+    const tableBodyRow = document.createElement('tr');
+    tbody.appendChild(tableBodyRow);
+    
+    const nameCell = document.createElement('td');
+    nameCell.textContent = valueObject.name;
+    tableBodyRow.appendChild(nameCell);
+
+    const birthCell = document.createElement('td');
+    birthCell.textContent = valueObject.birth;
+    tableBodyRow.appendChild(birthCell);
+
+    const zipCodeCell = document.createElement('td');
+    zipCodeCell.textContent = valueObject.zipcode;
+    tableBodyRow.appendChild(zipCodeCell);
+})
 
 containerDiv.appendChild(tableDiv);
 containerDiv.appendChild(formDiv);
