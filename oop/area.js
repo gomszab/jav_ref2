@@ -111,7 +111,7 @@ class Form extends Area {
     }
 }
 
-class Upload extends Area{
+class UploadDownload extends Area{
     constructor(cssClass, manager){
         super(cssClass, manager);
         const input = document.createElement('input')
@@ -132,6 +132,19 @@ class Upload extends Area{
                }
             }
             fileReader.readAsText(file);
+        })
+
+        const exportButton = document.createElement('button');
+        exportButton.textContent = 'Letöltés';
+        this.div.appendChild(exportButton);
+        exportButton.addEventListener('click', () => {
+            const link = document.createElement('a');
+            const content = this.manager.generateExportString();
+            const file = new Blob([content])
+            link.href = URL.createObjectURL(file);
+            link.download = 'newdata.csv'
+            link.click();
+            URL.revokeObjectURL(link.href);
         })
     }
 }
