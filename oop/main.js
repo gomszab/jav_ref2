@@ -12,6 +12,6 @@ const fieldConfig = [{
     fieldid: 'zipcode',
     fieldLabel: 'irányítószám'
 }]
-
-const table = new Table('table');
-const form = new Form('form', fieldConfig);
+const manager = new Manager()
+const table = new Table('table', manager);
+const form = new Form('form', fieldConfig, manager);
