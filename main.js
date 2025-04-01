@@ -100,3 +100,41 @@ formSim.addEventListener('submit', (e)=> {
 
 containerDiv.appendChild(tableDiv);
 containerDiv.appendChild(formDiv);
+
+const fileInput = document.createElement('input')
+containerDiv.appendChild(fileInput);
+fileInput.id='fileinput'
+fileInput.type = 'file';
+fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+       const fileLines = fileReader.result.split('\n')
+       const removedHeadLines = fileLines.slice(1);
+       for(const line of removedHeadLines){
+            const trimmedLine = line.trim();
+            const fields = trimmedLine.split(';');
+            const pers = {
+                name: fields[0],
+                birth: fields[1],
+                zipcode: fields[2]
+            }
+            array.push(pers);
+            const tableBodyRow = document.createElement('tr');
+            tbody.appendChild(tableBodyRow);
+            
+            const nameCell = document.createElement('td');
+            nameCell.textContent = pers.name;
+            tableBodyRow.appendChild(nameCell);
+        
+            const birthCell = document.createElement('td');
+            birthCell.textContent = pers.birth;
+            tableBodyRow.appendChild(birthCell);
+        
+            const zipCodeCell = document.createElement('td');
+            zipCodeCell.textContent = pers.zipcode;
+            tableBodyRow.appendChild(zipCodeCell);
+       }
+    }
+    fileReader.readAsText(file);
+})
