@@ -74,21 +74,18 @@ class Table extends Area {
 }
 
 class Form extends Area {
+
+    #formFieldArray;
+
     constructor(cssClass, fieldElementList, manager){
-        super(cssClass, manager);    
+        super(cssClass, manager);   
+        this.#formFieldArray = []; 
         const form = document.createElement('form');
         this.div.appendChild(form);
         for(const fieldElement of fieldElementList){
-            const field = makeDiv('field');
-            form.appendChild(field);
-            const label = document.createElement('label');
-            label.htmlFor = fieldElement.fieldid;
-            label.textContent = fieldElement.fieldLabel;
-            field.appendChild(label)
-            const input = document.createElement('input');
-            input.id = fieldElement.fieldid;
-            field.appendChild(document.createElement('br'))
-            field.appendChild(input)
+            const formField = new FormField(fieldElement.fieldid, fieldElement.fieldLabel);
+            this.#formFieldArray.push(formField);
+            form.appendChild(formField.getDiv());   
         }
         
         const button = document.createElement('button');
@@ -104,5 +101,46 @@ class Form extends Area {
             const person = new Person(valueObject.name, Number(valueObject.birth), Number(valueObject.zipcode));
             this.manager.addPerson(person);
         })
+    }
+}
+
+class FormField {
+    #id;
+    #inputElement;
+    #labelElement;
+    #errorElement;
+
+    get id(){
+        return this.#id;
+    }
+
+    get value(){
+        return this.#inputElement.value;
+    }
+
+    set error(value){
+        this.#errorElement.textContent = value;
+    }
+
+    constructor(id, labelContent){
+        this.#id = id;
+        this.#labelElement = document.createElement('label');
+        this.#labelElement.htmlFor = id;
+        this.#labelElement.textContent = labelContent;
+        this.#inputElement = document.createElement('input');
+        this.#inputElement.id = id;
+        this.#errorElement = document.createElement('span');
+        this.#errorElement.className = 'error';
+    }
+
+    getDiv(){
+        const div = makeDiv('field');
+        const br1 = document.createElement('br')
+        const br2 = document.createElement('br')
+        const htmlElements = [this.#labelElement, br1, this.#inputElement, br2, this.#errorElement];
+        for(const element of htmlElements){
+            div.appendChild(element); 
+        }
+        return div;
     }
 }
