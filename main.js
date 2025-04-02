@@ -5,6 +5,16 @@ const makeDiv = (className) => {
     return div;
 }
 
+const filter = (personArray, callback) => {
+    const result = [];
+    for(const element of personArray){
+        if(callback(element)){
+            result.push(element);
+        }
+    }
+    return result;
+}
+
 const containerDiv = makeDiv('container');
 document.body.appendChild(containerDiv);
 const tableDiv = makeDiv('table');
@@ -155,3 +165,75 @@ exportButton.addEventListener('click', () => {
     link.click();
     URL.revokeObjectURL(link.href);
 })
+
+const filterFormDiv = makeDiv('filterForm')
+containerDiv.appendChild(filterFormDiv);
+
+const formForFilter = document.createElement('form');
+filterFormDiv.appendChild(formForFilter);
+const select = document.createElement('select');
+formForFilter.appendChild(select);
+const options = [{
+    value: '',
+    innerText: ''
+},
+{
+    value: 'birth',
+    innerText: 'születési dátum'
+},
+{
+    value: 'zipcode',
+    innerText: 'irányítószám'
+}]
+for(const option of options){
+    const optionElement = document.createElement('option');
+    optionElement.value = option.value;
+    optionElement.innerText = option.innerText
+    select.appendChild(optionElement);
+}
+
+const input =  document.createElement('input');
+input.id='filterInput';
+formForFilter.appendChild(input);
+
+const button = document.createElement('button');
+button.innerText = 'Szures';
+formForFilter.appendChild(button);
+formForFilter.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const filterInput = e.target.querySelector('#filterInput');
+    const select = e.target.querySelector('select');
+
+    const filteredArray = filter(array, (element) => {
+        if(select.value == 'birth'){
+            if(filterInput.value === element.birth){
+                return true;
+            }
+        }else if(select.value == 'zipcode'){
+            if(filterInput.value === element.zipcode){
+                return true;
+            }
+        }else{
+            return true;
+        }
+    })
+
+    tbody.innerHTML = '';
+    for(const filteredElement of filteredArray){
+        const tableBodyRow = document.createElement('tr');
+            tbody.appendChild(tableBodyRow);
+            
+            const nameCell = document.createElement('td');
+            nameCell.textContent = filteredElement.name;
+            tableBodyRow.appendChild(nameCell);
+        
+            const birthCell = document.createElement('td');
+            birthCell.textContent = filteredElement.birth;
+            tableBodyRow.appendChild(birthCell);
+        
+            const zipCodeCell = document.createElement('td');
+            zipCodeCell.textContent = filteredElement.zipcode;
+            tableBodyRow.appendChild(zipCodeCell);
+    }
+})
+
