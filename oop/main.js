@@ -16,3 +16,4 @@ const manager = new Manager()
 const table = new Table('table', manager);
 const form = new Form('form', fieldConfig, manager);
 const fileUplad = new UploadDownload('upload', manager);
+const filterOop = new Filter('filter', manager);

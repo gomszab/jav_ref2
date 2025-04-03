@@ -37,21 +37,31 @@ class Table extends Area {
         super(cssClass, manager);
         const tbody = this.#createTable();
         this.manager.setAddPersonCallback((pers) => {
+            this.#createPersonRow(pers, tbody);
+        })
+        this.manager.setRenderTableCallback((personArray) => {
+            tbody.innerHTML = '';
+            for(const person of personArray){
+                this.#createPersonRow(person, tbody);
+            }
+        })
+    }
+
+    #createPersonRow(person, tablebody){
             const tableBodyRow = document.createElement('tr');
             
             const nameCell = document.createElement('td');
-            nameCell.textContent = pers.name;
+            nameCell.textContent = person.name;
             tableBodyRow.appendChild(nameCell);
 
             const birthCell = document.createElement('td');
-            birthCell.textContent = pers.birth;
+            birthCell.textContent = person.birth;
             tableBodyRow.appendChild(birthCell);
 
             const zipcodeCell = document.createElement('td');
-            zipcodeCell.textContent = pers.zipcode;
+            zipcodeCell.textContent = person.zipcode;
             tableBodyRow.appendChild(zipcodeCell);
-            tbody.appendChild(tableBodyRow);
-        })
+            tablebody.appendChild(tableBodyRow);
     }
 
     #createTable(){
