@@ -28,9 +28,7 @@ class Filter extends Area {
         const input =  document.createElement('input');
         input.id='filterInput';
         form.appendChild(input);
-        
-        const button = document.createElement('button');
-        button.innerText = 'Szűrés';
+        const button = this.createButton('Szűrés')
         form.appendChild(button);
         form.addEventListener('submit', (e) => {
             e.preventDefault();

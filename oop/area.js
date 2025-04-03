@@ -30,38 +30,49 @@ class Area{
         }
         return containerDiv;
     }
+
+    createButton(label){
+        const button = document.createElement('button');
+        button.textContent = label;
+        return button
+    }
 }
 
 class Table extends Area {
     constructor(cssClass, manager){
         super(cssClass, manager);
         const tbody = this.#createTable();
-        this.manager.setAddPersonCallback((pers) => {
-            this.#createPersonRow(pers, tbody);
-        })
-        this.manager.setRenderTableCallback((personArray) => {
-            tbody.innerHTML = '';
-            for(const person of personArray){
-                this.#createPersonRow(person, tbody);
+        this.manager.setAddPersonCallback(this.#addPersonCallback(tbody))
+        this.manager.setRenderTableCallback(this.#renderTableCallback(tbody))
+    }
+
+    #renderTableCallback(tableBody){
+        return (array) => {
+            tableBody.innerHTML = '';
+            for(const person of array){
+                this.#createPersonRow(person, tableBody);
             }
-        })
+        }
+    }
+
+    #addPersonCallback(tableBody){
+        return (person) => {
+            this.#createPersonRow(person, tableBody);
+        }
     }
 
     #createPersonRow(person, tablebody){
             const tableBodyRow = document.createElement('tr');
-            
-            const nameCell = document.createElement('td');
-            nameCell.textContent = person.name;
-            tableBodyRow.appendChild(nameCell);
-
-            const birthCell = document.createElement('td');
-            birthCell.textContent = person.birth;
-            tableBodyRow.appendChild(birthCell);
-
-            const zipcodeCell = document.createElement('td');
-            zipcodeCell.textContent = person.zipcode;
-            tableBodyRow.appendChild(zipcodeCell);
+            this.#createCell(tableBodyRow, person.name)
+            this.#createCell(tableBodyRow, person.birth)
+            this.#createCell(tableBodyRow, person.zipcode)
             tablebody.appendChild(tableBodyRow);
+    }
+
+    #createCell(row, textContent, type='td'){
+        const cell = document.createElement(type);
+        cell.textContent = textContent;
+        row.appendChild(cell);
     }
 
     #createTable(){
@@ -73,9 +84,7 @@ class Table extends Area {
         thead.appendChild(theadRow);
         const theadCells = ['név', 'születési dátum', 'irányítószám'];
         for(const cellContent of theadCells){
-            const thcell = document.createElement('th');
-            thcell.innerText = cellContent;
-            theadRow.appendChild(thcell);
+            this.#createCell(theadRow, cellContent, 'th')
         }
         const tbody = document.createElement('tbody');
         table.appendChild(tbody);
@@ -90,34 +99,54 @@ class Form extends Area {
     constructor(cssClass, fieldElementList, manager){
         super(cssClass, manager);    
         this.#formFieldArray = []
+        const form = this.#createForm(fieldElementList);
+        form.addEventListener('submit', this.#formsubmitEventListener())
+    }
+
+    #createForm(fieldConfigurationList){
         const form = document.createElement('form');
         this.div.appendChild(form);
-        for(const fieldElement of fieldElementList){
+        for(const fieldElement of fieldConfigurationList){
             const formField = new FormField(fieldElement.fieldid, fieldElement.fieldLabel);
             this.#formFieldArray.push(formField);
             form.appendChild(formField.getDiv());   
         }
         
-        const button = document.createElement('button');
-        button.textContent = 'hozzáadás';
+        const button = this.createButton('Hozzáadás')
         form.appendChild(button)
-        form.addEventListener('submit', (e)=> {
+
+        return form;
+    }
+
+    #formsubmitEventListener(){
+        return (e)=> {
             e.preventDefault();
-            const valueObject = {};
-            let valid = true;
-            for(const formField of this.#formFieldArray){
-                formField.error = '';
-                if(formField.value === ''){
-                    formField.error = 'Kotelezo megadni';
-                    valid = false;
-                }
-                valueObject[formField.id] = formField.value;
-            }
-            if(valid){
+            if(this.#validateAllFields()){
+                const valueObject = this.#getValueObject();
                 const person = new Person(valueObject.name, Number(valueObject.birth), Number(valueObject.zipcode));
                 this.manager.addPerson(person);
             } 
-        })
+        }
+    }
+
+    #validateAllFields(){
+        let valid = true;
+        for(const formField of this.#formFieldArray){
+            formField.error = '';
+            if(formField.value === ''){
+                formField.error = 'Kotelezo megadni';
+                valid = false;
+            }
+        }
+        return valid
+    }
+
+    #getValueObject(){
+        const valueObject = {};
+        for(const formField of this.#formFieldArray){
+            valueObject[formField.id] = formField.value;
+        }
+        return valueObject;
     }
 }
 
@@ -128,7 +157,26 @@ class UploadDownload extends Area{
         input.id ='fileinput';
         input.type ='file'
         this.div.appendChild(input);
-        input.addEventListener('change', (e)=>{
+        input.addEventListener('change',this.#importInputEventListener())
+        const exportButton = this.createButton('Letöltés')
+        this.div.appendChild(exportButton);
+        exportButton.addEventListener('click', this.#exportButtonEventListener())
+    }
+
+    #exportButtonEventListener(){
+        return () => {
+            const link = document.createElement('a');
+            const content = this.manager.generateExportString();
+            const file = new Blob([content])
+            link.href = URL.createObjectURL(file);
+            link.download = 'newdata.csv'
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+    }
+
+    #importInputEventListener(){
+        return  (e)=>{
             const file = e.target.files[0];
             const fileReader = new FileReader();
             fileReader.onload = () => {
@@ -142,20 +190,7 @@ class UploadDownload extends Area{
                }
             }
             fileReader.readAsText(file);
-        })
-
-        const exportButton = document.createElement('button');
-        exportButton.textContent = 'Letöltés';
-        this.div.appendChild(exportButton);
-        exportButton.addEventListener('click', () => {
-            const link = document.createElement('a');
-            const content = this.manager.generateExportString();
-            const file = new Blob([content])
-            link.href = URL.createObjectURL(file);
-            link.download = 'newdata.csv'
-            link.click();
-            URL.revokeObjectURL(link.href);
-        })
+        }
     }
 }
 
