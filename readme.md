@@ -9,9 +9,11 @@ Ha valamelyik link rossz helyre mutat, szólj. A commitok listája itt is elérh
 
 ## Formátum
 - minden sor felkommentezve kell legyen
-- jsdoc /** */ -es doksizás minden egyes függvényen, illetve a classokon, azok metódusain valamint type definíció a tulajdonságokon
+- jsdoc /** */ -es doksizás minden egyes függvényen, illetve a classokon, azok metódusain (ideértve gettert settert) valamint type definíció a tulajdonságokon
+- egy függvény (és callback) akkor dokumentált, ha @returns és @param is meg van adva típusokkal
+- összefoglaló típus definiálása nem kötelező, de ajánlott, ha jobban olvasható kódot szeretnél
 - Minden callback-nek kötelező definiciót létrehozni /** */ @callback-el
-- Object és Array típus megadása nem elfogadott
+- Object, any, unknown, valamint Function és Array (utóbbi 2 paraméter nélkül) típus megadása nem elfogadott
 - a pótlások közül az egyiknek a forradalmaknak kell lennie, a másik szabadon választható a másik 2 olyan dolgozatból, ami nem a mintadolgozat.
 - A /** */-ozás lehet utólag is az utolsó commit-ban, de javasolt abban a commitban túl esni rajta amikor bevezetésre kerül
 - Olyan függvények használata nem engedélyezett, amelyekről az órán nem volt szó
