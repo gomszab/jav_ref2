@@ -1,6 +1,10 @@
 Ha valamelyik link rossz helyre mutat, szólj. A commitok listája itt is elérhető (az utolsó pótlásos, az oop refactor 2):
 [commit history](https://github.com/gomszab/jav_ref2/commits/main/)
 
+# ❗UPDATE [04.18]❗
+Tettem fel egy commit checklistet plussz segítségként: [checklist](https://gomszab.github.io/checklist/) még in progress, valószínűleg bugos is. A commit akkor done, ha zöld lesz a piros (természetesen a jsdocot utólag is elfogadom, de a kód értelmezése nyilván könnyebb commitonként). Használata nem kötelező, új infót nem tartalmaz.
+Az adatstruktúrán még dolgozom.
+
 # Szabályok
 ## Határidők
 - első határidő: április 16 (eddig kell min 1-et)
